@@ -18,14 +18,14 @@ int main ()
     */
     for (int i = 0; i < arr_size; i++){
     asm volatile(
-    	"sub %0, %4, %5\n\t"
+    	"sub %[c_i], %[a_i], %[b_i]\n\t"
     	// add redister address
-    	"addi %1, %1, 4\n\t"
-    	"addi %2, %2, 4\n\t"
-    	"addi %3, %3, 4\n\t"
+    	"addi %[p_a], %[p_a], 4\n\t"
+    	"addi %[p_b], %[p_b], 4\n\t"
+    	"addi %[p_c], %[p_c], 4\n\t"
     	
-    	:"=r" (*p_c) ,"+r"(p_a),"+r"(p_b),"+r"(p_c) //output 
-    	:"r" (*p_a), "r" (*p_b) //input
+    	:[c_i]"=r" (*p_c) ,[p_a]"+r"(p_a),[p_b]"+r"(p_b), [p_c]"+r"(p_c) //output 
+    	:[a_i]"r" (*p_a), [b_i]"r" (*p_b) //input
 	:
     
     );
