@@ -18,15 +18,20 @@ int main ()
     */
     for (int i = 0; i < arr_size; i++){
     asm volatile(
-    	"sub %0, %1, %2\n\t"
-    	:"=r" (*p_c)
-    	:"r" (*p_a), "r" (*p_b)
+    	"sub %0, %4, %5\n\t"
+    	// add redister address
+    	"addi %1, %1, 4\n\t"
+    	"addi %2, %2, 4\n\t"
+    	"addi %3, %3, 4\n\t"
+    	
+    	:"=r" (*p_c) ,"+r"(p_a),"+r"(p_b),"+r"(p_c) //output 
+    	:"r" (*p_a), "r" (*p_b) //input
 	:
     
     );
-    p_a++;
-    p_b++;
-    p_c++;
+    //p_a++;
+    //p_b++;
+    //p_c++;
     
     }
     p_c = &c[0];
