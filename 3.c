@@ -11,6 +11,7 @@ int main()
     int *p_x = &x[0] ;
     int *p_h = &h[0] ;
     int *p_y = &y[0] ;
+            int reg = 0;
     for (i = 0; i < 3; i++){ 
 	/* p_x points to the beginning of the input vector */
 	p_x = &x[0];
@@ -18,7 +19,6 @@ int main()
         for (j = 0; j < 2; j++){   
             p_h = &h[i * 3];     	
             for (f = 0; f < 3; f++){
-            int reg = 0;
                	asm volatile(
                     "mul %[reg], %[h_i], %[x_i]\n\t"//reg = h[f] * x[f]	
                     "add %[y_i], %[y_i], %[reg]\n\t"//y[f] =y[f] + reg

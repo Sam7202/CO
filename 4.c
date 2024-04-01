@@ -23,34 +23,44 @@ int main()
     int bound_3 = 3;
     int bound_2 = 2;
     int num12 =12;
+    
     asm volatile(
     	//loop1
     	"loop1:\n\t"
-    	"beq %[i],%[bound3], Exit\n\t"
-    	"addi %[i], %[i], 1\n\t"
-    	"add %[p_x], %[p_x], %[x0]\n\t" //p_x = &x[0]
-    	"add %[j], x0,x0\n\t"	//reset j to new loop2
+    	"add %[j], %[x0],%[x0]\n\t"	//reset j to new loop2
     	
+    	"add %[p_x], %[x0], %[x_0]\n\t" //p_x = &x[0]
     	/* do matrix multiply */
     	//loop2
     	"loop2:\n\t"
-    	"beq %[j],%[bound2], loop1\n\t"
-    	"addi %[j], %[j], 1\n\t"
+    	"add %[f], %[x0],%[x0]\n\t"	//reset f to new loop3
+    	
     	"mul %[temp1], %[i], %[num12]\n\t" //temp = i * 3
     	"add %[p_h], %[temp1], %[h0]\n\t" //p_h = temp + &h[0](may need *12)
-    	"add %[f], x0,x0\n\t"	//reset f to new loop2
+    	
     	//loop3
     	"loop3:\n\t"
-    	"beq %[f],%[bound3], nextElement\n\t"
-    	"addi %[f], %[f], 1\n\t"
-    	//next element
-    	"nextElement:\n\t"
-    	"add %[p_x] , x0, %[x1]\n\t"
+    	"mul %[temp1], %[h_i], %[x_i]\n\t"//temp1 = *p_h * *p_x	
+        "add %[y_i], %[y_i], %[temp1]\n\t"//*p_y =*p_y + temp1
+        "addi %[p_h], %[p_h], 4\n\t"//p_h++
+        "addi %[p_x], %[p_x], 8\n\t"//p_x+=8(1->3->5)
+    	//loop3 end
+    	"addi %[f], %[f], 1\n\t"//f++
+    	"blt %[f], %[bound3], loop3\n\t"// back to loop3
     	
+    	/* next element */
+    	"add %[p_x] , %[x0], %[x_1]\n\t"//p_x = &x[1]
+    	"addi %[p_y] , %[p_y], 4\n\t"//p_y++
+    	//loop2 end
+    	"addi %[j], %[j], 1\n\t"	//j++
+    	"blt %[j], %[bound2], loop2\n\t"// back to loop2
+    	//loop1 end
+    	"addi %[i], %[i], 1\n\t"	//i++
+    	"blt %[i], %[bound3], loop1\n\t"	//if(i<3) back ioop1
     	"Exit:\n\t"
-    	:[i]"+r"(i1), [j]"+r"(j), [f]"+r"(f), [p_x]"+r"(p_x),[p_ys]"+r"(p_y), [p_h]"+r"(p_h), [temp1]"+r"(temp1)
-    	:[x0]"r"(&x[0]), [bound3]"r"(bound_3), [bound2]"r"(bound_2), [h0]"r"(&h[0]), [num12]"r"(num12), [x1]"r"(&x[1]),
-    	:
+    	:[i]"+r"(i1), [j]"+r"(j), [f]"+r"(f), [p_x]"+r"(p_x), [p_y]"+r"(p_y), [p_h]"+r"(p_h), [temp1]"+r"(temp1), [y_i]"=r"(*p_y)
+    	:[x_0]"r"(&x[0]), [bound3]"r"(bound_3), [bound2]"r"(bound_2), [h0]"r"(&h[0]), [num12]"r"(num12), [x_1]"r"(&x[1]), [h_i]"r"(*p_h), [x_i]"r"(*p_x),[x0]"r"(0)//input
+    	
     );
 
     p_y = &y[0];
