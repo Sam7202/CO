@@ -1,4 +1,4 @@
-#define macro_pi_cycle_count pi_cycle_count = (add_cnt * add_CPI + sub_cnt * sub_CPI + mul_cnt * mul_CPI + div_cnt * div_CPI + lw_cnt * lw_CPI + sw_cnt * sw_CPI + others_cnt * others_CPI) * N;
+#define macro_pi_cycle_count pi_cycle_count = (add_cnt * add_CPI + sub_cnt * sub_CPI + mul_cnt * mul_CPI + div_cnt * div_CPI + lw_cnt * lw_CPI + sw_cnt * sw_CPI + others_cnt * others_CPI);
 
 
 #define macro_pi_cpu_time pi_cpu_time = pi_cycle_count * cycle_time;
