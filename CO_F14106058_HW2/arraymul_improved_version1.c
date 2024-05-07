@@ -21,4 +21,4 @@
         "add %[y], %[y], t0\n\t"
         "addi %[add_cnt], %[add_cnt], 1\n\t"
         "addi %[others_cnt], %[others_cnt], 1\n\t"
-        "bnez %[arr_size], improved_loop\n\t"
+        "bgtz %[arr_size], improved_loop\n\t"
